@@ -17,9 +17,6 @@ function Table({
                                 {column.name}
                             </th>
                         )}
-                        <th scope="col" className="px-6 py-3">
-                            Action
-                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,7 +28,7 @@ function Table({
                                     type="radio"
                                     onClick={(e) => selectRow(index)}
                                     name="selected-row"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                                 />
                             </td>
                             {columns.map((column, index) =>
@@ -39,9 +36,6 @@ function Table({
                                     {row[column.field]}
                                 </td>
                             )}
-                            <td className="px-6 py-4 text-right">
-                                <a href="#" className="font-medium text-blue-600 hover:underline">Edit</a>
-                            </td>
                         </tr>
                     )}
                 </tbody>

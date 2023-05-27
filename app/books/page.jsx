@@ -8,7 +8,7 @@ import useAxios from 'axios-hooks';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 function Books() {
     const { data: session } = useSession({
@@ -24,7 +24,11 @@ function Books() {
     const token = session?.user?.token;
     const defaultUrl = `${process.env.SERVER_HOST ?? 'localhost'}/api/books?page_size=${pageSize}`
     const [url, setUrl] = useState(defaultUrl);
-    const [{ data, loading, error }, refetch] = useAxios({ url, headers: { 'Authorization': 'Bearer ' + token } });
+    const [{ data, loading, error }, executeAxios] = useAxios({ url, headers: { 'Authorization': 'Bearer ' + token } }, { manual: true });
+
+    useEffect(() => {
+        executeAxios();
+    }, [url]);
 
     const moveToPage = (page) => {
         let querySelectors = `&page_size=${pageSize}`;
@@ -32,10 +36,10 @@ function Books() {
             querySelectors += `&filter=${inputFilter}`
         }
         const newUrl = page + querySelectors;
-        setUrl(newUrl);
+        setUrl(newUrl)
     }
 
-    const search = () => {
+    const search = async () => {
         let querySelectors = "";
         if (inputFilter.length > 0) {
             querySelectors += `&filter=${inputFilter}`
@@ -80,19 +84,20 @@ function Books() {
                     </select>
                     <Button className="ml-4" onClick={(e) => search()}>Search</Button>
                 </div>
-                <div class="inline-flex rounded-md shadow-sm ml-8" role="group">
-                    <Link href={rowSelected >= 0 ? `/books/${data?.data[rowSelected]?.slug}` : "/books"} class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+                <div className="inline-flex rounded-md shadow-sm ml-8" role="group">
+                    <Link href={rowSelected >= 0 ? `/books/${data?.data[rowSelected]?.id}` : "/books"} className={`${session?.user?.role == 'librarian' ? 'rounded-l-lg' : 'rounded-lg'} px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700`}>
                         Show
                     </Link>
-                    <button type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
-                        Create
-                    </button>
-                    <button type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
-                        Checkout
-                    </button>
-                    <button type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
-                        Delete
-                    </button>
+                    {session?.user?.role == 'librarian'
+                        ?
+                        <>
+                            <Link href={`/books/new`} className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+                                Create
+                            </Link>
+                            <button type="button" className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+                                Delete
+                            </button></>
+                        : <></>}
                 </div>
             </div>
             <Table

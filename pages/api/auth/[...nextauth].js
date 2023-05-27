@@ -6,11 +6,11 @@ export const authOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                username: { label: "Username", type: "text", placeholder: "User Name" },
+                email: { label: "Email", type: "text", placeholder: "User Name" },
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                const { username, password } = credentials
+                const { email, password } = credentials
                 const url = `${process.env.SERVER_HOST ?? 'localhost'}/api/auth/login`;
                 const res = await fetch(url, {
                     method: "POST",
@@ -18,7 +18,7 @@ export const authOptions = {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        "email": username,
+                        email,
                         password,
                     }),
                 })

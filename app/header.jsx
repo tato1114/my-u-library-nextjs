@@ -2,7 +2,7 @@ import { signIn, signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import React from 'react'
 
-function header() {
+function Header() {
     const { data: session } = useSession()
 
     return (
@@ -42,4 +42,4 @@ function header() {
     )
 }
 
-export default header
+export default Header
