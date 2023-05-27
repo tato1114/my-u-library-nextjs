@@ -12,9 +12,8 @@ const Input = ({
 }) => {
 
     return (
-        <div>
-
-            <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900">{label}</label>
+        <>
+            <label htmlFor="message" className="block mb-2 mr-4 text-sm font-medium text-gray-900">{label}</label>
             <input
                 id={id}
                 type={type}
@@ -28,7 +27,7 @@ const Input = ({
                 ? <p className="mt-2 text-sm text-red-600"><span class="font-medium">Oops!</span>{error}</p>
                 : <></>
             }
-        </div>
+        </>
     );
 };
 
