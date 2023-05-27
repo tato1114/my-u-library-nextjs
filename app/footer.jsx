@@ -1,0 +1,13 @@
+import React from 'react'
+
+function footer() {
+    return (
+        <footer className='z-10 bg-stone-300 py-4 text-center text-white'>
+            <div className='container'>
+                <p className='text-sm text-stone-500 uppercase'>NextJS 13 Demo</p>
+            </div>
+        </footer>
+    )
+}
+
+export default footer
