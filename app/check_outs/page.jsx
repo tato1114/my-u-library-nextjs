@@ -30,6 +30,24 @@ function CheckOuts() {
         executeAxios();
     }, [url]);
 
+    const [{ dataReturnBook, loadingReturnBook, errorReturnBook }, executeReturnBook] =
+        useAxios({
+            url: `${process.env.SERVER_HOST ?? 'localhost'}/api/check_outs/${data?.data[rowSelected]?.id}`,
+            method: 'PUT',
+            headers: { 'Authorization': 'Bearer ' + token }
+        },
+            { manual: true });
+
+    const returnBook = () => {
+        if (data?.data[rowSelected]?.status == 'returned') {
+            alert('This book is already returned')
+            return
+        }
+        if (confirm(`Are you sure you want to mark this book as returned? ${data?.data[rowSelected]?.title}`)) {
+            executeReturnBook();
+        }
+    }
+
     const moveToPage = (page) => {
         let querySelectors = `&page_size=${pageSize}`;
         if (inputFilter.length > 0) {
@@ -86,9 +104,9 @@ function CheckOuts() {
                     <Button className="ml-4" onClick={(e) => search()}>Search</Button>
                 </div>
                 <div className="inline-flex rounded-md shadow-sm ml-8" role="group">
-                    <Link href={rowSelected >= 0 ? `/check_outs/${data?.data[rowSelected]?.id}` : "/check_outs"} className={`rounded-lg px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700`}>
-                        Show
-                    </Link>
+                    <button type="button" onClick={returnBook} className="rounded-lg px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+                        Mark as returned
+                    </button>
                 </div>
             </div>
             <Table
