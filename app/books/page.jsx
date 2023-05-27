@@ -30,6 +30,20 @@ function Books() {
         executeAxios();
     }, [url]);
 
+    const [{ dataDelete, loadingDelete, errorDelete }, executeDelete] =
+        useAxios({
+            url: `${process.env.SERVER_HOST ?? 'localhost'}/api/books/${data?.data[rowSelected]?.id}`,
+            method: 'DELETE',
+            headers: { 'Authorization': 'Bearer ' + token }
+        },
+            { manual: true });
+
+    const deleteBook = () => {
+        if (confirm(`Are you sure you want to delete this book? ${data?.data[rowSelected]?.title}`)) {
+            executeDelete();
+        }
+    }
+
     const moveToPage = (page) => {
         let querySelectors = `&page_size=${pageSize}`;
         if (inputFilter.length > 0) {
@@ -94,7 +108,7 @@ function Books() {
                             <Link href={`/books/new`} className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
                                 Create
                             </Link>
-                            <button type="button" className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+                            <button type="button" onClick={deleteBook} className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
                                 Delete
                             </button></>
                         : <></>}
