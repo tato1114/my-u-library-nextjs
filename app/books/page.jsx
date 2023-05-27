@@ -25,10 +25,11 @@ function Books() {
     const defaultUrl = `${process.env.SERVER_HOST ?? 'localhost'}/api/books?page_size=${pageSize}`
     const [url, setUrl] = useState(defaultUrl);
     const [{ data, loading, error }, executeAxios] = useAxios({ url, headers: { 'Authorization': 'Bearer ' + token } }, { manual: true });
+    const [trigger, setTrigger] = useState(false);
 
     useEffect(() => {
         executeAxios();
-    }, [url]);
+    }, [url, trigger]);
 
     const [{ dataDelete, loadingDelete, errorDelete }, executeDelete] =
         useAxios({
@@ -38,9 +39,10 @@ function Books() {
         },
             { manual: true });
 
-    const deleteBook = () => {
+    const deleteBook = async () => {
         if (confirm(`Are you sure you want to delete this book? ${data?.data[rowSelected]?.title}`)) {
-            executeDelete();
+            await executeDelete()
+                .then(setTrigger(!trigger));
         }
     }
 
@@ -58,8 +60,12 @@ function Books() {
         if (inputFilter.length > 0) {
             querySelectors += `&filter=${inputFilter}`
         }
+        const oldUrl = url;
         const newUrl = defaultUrl + querySelectors;
         setUrl(newUrl);
+        if (oldUrl == newUrl) {
+            setTrigger(!trigger)
+        }
     }
 
     let body

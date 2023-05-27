@@ -19,16 +19,17 @@ function CheckOuts() {
     })
     const [inputFilter, setInputFilter] = useState("");
     const [pageSize, setPageSize] = useState(10);
-    const [rowSelected, setRowSelected] = useState();
+    const [rowSelected, setRowSelected] = useState(null);
 
     const token = session?.user?.token;
     const defaultUrl = `${process.env.SERVER_HOST ?? 'localhost'}/api/check_outs?page_size=${pageSize}`
     const [url, setUrl] = useState(defaultUrl);
+    const [trigger, setTrigger] = useState(false);
     const [{ data, loading, error }, executeAxios] = useAxios({ url, headers: { 'Authorization': 'Bearer ' + token } }, { manual: true });
 
     useEffect(() => {
         executeAxios();
-    }, [url]);
+    }, [url, trigger]);
 
     const [{ dataReturnBook, loadingReturnBook, errorReturnBook }, executeReturnBook] =
         useAxios({
@@ -38,13 +39,14 @@ function CheckOuts() {
         },
             { manual: true });
 
-    const returnBook = () => {
+    const returnBook = async () => {
         if (data?.data[rowSelected]?.status == 'returned') {
             alert('This book is already returned')
             return
         }
         if (confirm(`Are you sure you want to mark this book as returned? ${data?.data[rowSelected]?.title}`)) {
-            executeReturnBook();
+            await executeReturnBook()
+                .then(setTrigger(!trigger));
         }
     }
 
