@@ -33,7 +33,7 @@ function Table({
                             </td>
                             {columns.map((column, index) =>
                                 <td key={index} scope="col" className="px-6 py-3">
-                                    {row[column.field]}
+                                    {column.nested_field ? row[column.field][column.nested_field] : row[column.field]}
                                 </td>
                             )}
                         </tr>

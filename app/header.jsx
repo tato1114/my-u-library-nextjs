@@ -15,7 +15,7 @@ function Header() {
                                 <Link href='/books'>Books</Link>
                             </li>
                             <li>
-                                <Link href='/users'>Checkouts</Link>
+                                <Link href='/check_outs'>Checkouts</Link>
                             </li>
                         </>
                         : <></>
