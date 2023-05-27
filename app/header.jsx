@@ -8,8 +8,8 @@ function header() {
 
     return (
         <header className='bg-stone-300 py-10'>
-            <nav className='container flex items-center text-sm font-medium tracking-wider uppercase text-stone-500'>
-                <ul className='ml-auto flex justify-center gap-8'>
+            <nav className='container flex items-center justify-between text-sm font-medium tracking-wider uppercase text-stone-500'>
+                <ul className='flex justify-center gap-8 ml-8'>
                     <li>
                         <Link href='/'>Books</Link>
                     </li>
@@ -17,16 +17,20 @@ function header() {
                         <Link href='/users'>Checkouts</Link>
                     </li>
                 </ul>
-                <ul className='ml-auto'>
-                    <li>
-                        {session?.user
-                            ? (<>
-                                <p className='text-stone-500'>{session.user.name}</p>
+                <ul className='flex justify-center gap-8'>
+                    {session?.user
+                        ? <>
+                            <li>
+                                <span className='text-stone-500 '>{session.user.name}</span>
+                            </li>
+                            <li>
                                 <button className='text-stone-500 mr-8 uppercase' onClick={() => signOut()}>Sign out</button>
-                            </>)
-                            : <button className='text-stone-500 mr-8 uppercase' onClick={() => signIn()}>Log In</button>
-                        }
-                    </li>
+                            </li>
+                        </>
+                        : <li>
+                            <button className='text-stone-500 mr-8 uppercase' onClick={() => signIn()}>Log In</button>
+                        </li>
+                    }
                 </ul>
             </nav>
         </header>
