@@ -8,7 +8,6 @@ const Input = ({
     validate,
     placeholder,
     label = "",
-    error = ""
 }) => {
 
     return (
@@ -23,10 +22,6 @@ const Input = ({
                 validate={validate}
                 placeholder={placeholder}
             />
-            {error
-                ? <p className="mt-2 text-sm text-red-600"><span class="font-medium">Oops!</span>{error}</p>
-                : <></>
-            }
         </>
     );
 };
