@@ -18,11 +18,12 @@ function Book({ params }) {
     })
     const [dataStored, setDataStored] = useState(false);
     const token = session?.user?.token;
+    const isNormalUser = session?.user?.role == 'user';
     const url = `${process.env.SERVER_HOST ?? 'localhost'}/api/books/${params.id != 'new' ? params.id : ''}`
     const headers = { 'Authorization': 'Bearer ' + token }
     const [{ data, loading, error }, executeGet] = useAxios({ url, headers: headers }, { manual: true });
 
-    const { register, handleSubmit, setValue, formState: { errors }, } = useForm({});
+    const { register, handleSubmit, setValue, watch, formState: { errors }, } = useForm({});
 
     useEffect(() => {
         if (params.id != 'new') {
@@ -95,7 +96,6 @@ function Book({ params }) {
             setValue("stock", data.stock)
         }
         body = <>
-
             <nav className="flex self-start mb-8" aria-label="Breadcrumb">
                 <ol className="inline-flex items-center space-x-1 md:space-x-3">
                     <li className="inline-flex items-center">
@@ -109,38 +109,38 @@ function Book({ params }) {
             <form className='w-full' onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-6 w-1/2">
                     <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900">Title</label>
-                    <input type="text" {...register("title", { required: true })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " />
-                    {errors.email && <div className="rounded  border border-red-600 bg-red-50 p-1 text-red-600">{errors.title.message} </div>}
+                    <input type="text" {...register("title", { required: { value: true, message: "This field is required" } })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" readOnly={isNormalUser} />
+                    {errors.title && <div className="rounded  border border-red-600 bg-red-50 p-1 text-red-600">{errors.title.message} </div>}
                 </div>
                 <div className="mb-6 w-1/2">
                     <label htmlFor="author" className="block mb-2 text-sm font-medium text-gray-900">Author</label>
-                    <input type="text" {...register("author", { required: true })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " />
-                    {errors.email && <div className="rounded  border border-red-600 bg-red-50 p-1 text-red-600">{errors.author.message} </div>}
+                    <input type="text" {...register("author", { required: { value: true, message: "This field is required" } })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" readOnly={isNormalUser} />
+                    {errors.author && <div className="rounded  border border-red-600 bg-red-50 p-1 text-red-600">{errors.author.message} </div>}
                 </div>
                 <div className="mb-6 w-1/2">
                     <label htmlFor="published_year" className="block mb-2 text-sm font-medium text-gray-900">Release year</label>
-                    <input type="text" {...register("published_year", { required: true })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " />
-                    {errors.email && <div className="rounded  border border-red-600 bg-red-50 p-1 text-red-600">{errors.published_year.message} </div>}
+                    <input type="text" {...register("published_year", { required: { value: true, message: "This field is required" } })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" readOnly={isNormalUser} />
+                    {errors.published_year && <div className="rounded  border border-red-600 bg-red-50 p-1 text-red-600">{errors.published_year.message} </div>}
                 </div>
                 <div className="mb-6 w-1/2">
                     <label htmlFor="genre" className="block mb-2 text-sm font-medium text-gray-900">Genre</label>
-                    <input type="text" {...register("genre", { required: true })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " />
-                    {errors.email && <div className="rounded  border border-red-600 bg-red-50 p-1 text-red-600">{errors.genre.message} </div>}
+                    <input type="text" {...register("genre", { required: { value: true, message: "This field is required" } })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" readOnly={isNormalUser} />
+                    {errors.genre && <div className="rounded  border border-red-600 bg-red-50 p-1 text-red-600">{errors.genre.message} </div>}
                 </div>
                 <div className="mb-6 w-1/2">
                     <label htmlFor="stock" className="block mb-2 text-sm font-medium text-gray-900">Stock</label>
-                    <input type="number" {...register("stock", { required: true, min: 0 })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " />
-                    {errors.email && <div className="rounded  border border-red-600 bg-red-50 p-1 text-red-600">{errors.stock.message} </div>}
+                    <input type="number" {...register("stock", { required: { value: true, message: "This field is required" }, min: { value: 0, message: "The minimum value is 0" } })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" readOnly={isNormalUser} />
+                    {errors.stock && <div className="rounded  border border-red-600 bg-red-50 p-1 text-red-600">{errors.stock.message} </div>}
                 </div>
-                {session?.user?.role == 'user'
+                {isNormalUser
                     ? <Button onClick={(e) => {
                         e.preventDefault();
                         checkOut()
                     }}
                     >
-                        Request check out</Button>
+                        Request check out
+                    </Button>
                     : <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>}
-
             </form>
         </>
     }
