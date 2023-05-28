@@ -2,7 +2,6 @@
 
 import './globals.css'
 import { SessionProvider } from "next-auth/react"
-import Footer from './footer'
 import Header from './header'
 
 export default function RootLayout({ children, session }) {
@@ -12,7 +11,6 @@ export default function RootLayout({ children, session }) {
         <SessionProvider session={session}>
           <Header />
           {children}
-          <Footer />
         </SessionProvider>
       </body>
     </html>
